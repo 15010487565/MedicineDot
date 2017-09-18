@@ -70,6 +70,24 @@ public class Logininfo implements Serializable{
         private String sex;
         private String headimg;
         private String token;
+        private String hxname;
+        private String hxpwd;
+
+        public String getHxname() {
+            return hxname;
+        }
+
+        public void setHxname(String hxname) {
+            this.hxname = hxname;
+        }
+
+        public String getHxpwd() {
+            return hxpwd;
+        }
+
+        public void setHxpwd(String hxpwd) {
+            this.hxpwd = hxpwd;
+        }
 
         public String getUid() {
             return uid;

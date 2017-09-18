@@ -2,12 +2,15 @@ package com.medicinedot.www.medicinedot.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.medicinedot.www.medicinedot.R;
 
 import java.io.IOException;
@@ -16,7 +19,7 @@ import java.util.Map;
 import www.xcd.com.mylibrary.base.activity.SimpleTopbarActivity;
 import www.xcd.com.mylibrary.utils.XCDSharePreference;
 
-public class MeSettingActivity extends SimpleTopbarActivity {
+public class MeSettingActivity extends SimpleTopbarActivity implements EMCallBack{
 
     private LinearLayout bindingmobile;
     private RelativeLayout updata_password,about,opinion_feedback;
@@ -89,6 +92,7 @@ public class MeSettingActivity extends SimpleTopbarActivity {
                 Intent in = new Intent("android.intent.action.LOGIN");
                 in.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(in);
+                EMClient.getInstance().logout(true);
                 break;
         }
     }
@@ -114,6 +118,21 @@ public class MeSettingActivity extends SimpleTopbarActivity {
 
     @Override
     public void onFinishResult() {
+
+    }
+    @Override
+    public void onSuccess() {
+        Log.e("TAG_环信","退出环信登录");
+    }
+
+    @Override
+    public void onError(int code, String message) {
+        Log.e("TAG_环信","退出环信登录失败code="+code+";message="+message);
+        EMClient.getInstance().logout(false);
+    }
+
+    @Override
+    public void onProgress(int i, String s) {
 
     }
 }

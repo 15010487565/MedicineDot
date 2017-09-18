@@ -1,97 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:hyphenate="http://schemas.android.com/apk/res-auto"
     android:fillViewport="false"
     android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true">
-    <LinearLayout
+    <include layout="@layout/view_simple_topbar" />
+    <com.hyphenate.easeui.widget.EaseConversationList
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/view_simple_topbar" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_150">
-
-            <ImageView
-                android:id="@+id/mefragment_headbg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:scaleType="fitXY" />
-
-            <ImageView
-                android:id="@+id/mefragment_headalpha"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black"
-                android:contentDescription="@null"
-                android:scaleType="fitXY" />
-
-            <LinearLayout
-                android:id="@+id/mefragment_info"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/mefragment_head"
-                    android:layout_width="@dimen/me_account_head_size"
-                    android:layout_height="@dimen/me_account_head_size"
-                    android:contentDescription="@null"
-                    android:src="@mipmap/defaulthead" />
-
-                <TextView
-                    android:id="@+id/mefragment_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/mefragment_head"
-                    android:layout_marginTop="@dimen/margin_10"
-                    android:duplicateParentState="true"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="X先生"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/textsize_18" />
-            </LinearLayout>
-        </RelativeLayout>
-        <LinearLayout
-            android:id="@+id/me_custom_func_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/me_vertical_margin"
-            android:orientation="vertical"
-            android:paddingBottom="1px"
-            android:paddingTop="1px">
-
-            <LinearLayout
-                android:id="@+id/me_custom_func_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/me_system_func_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/me_vertical_margin"
-            android:orientation="vertical"
-            android:paddingBottom="1px"
-            android:paddingTop="1px">
-
-            <LinearLayout
-                android:id="@+id/me_system_func_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        hyphenate:cvsListPrimaryTextSize="16sp"/>
+</LinearLayout>

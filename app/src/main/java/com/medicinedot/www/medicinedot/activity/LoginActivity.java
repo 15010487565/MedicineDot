@@ -17,6 +17,8 @@ import android.widget.Gallery;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.medicinedot.www.medicinedot.R;
 import com.medicinedot.www.medicinedot.bean.CityListAllInfo;
 import com.medicinedot.www.medicinedot.bean.Logininfo;
@@ -39,12 +41,14 @@ import www.xcd.com.mylibrary.utils.XCDSharePreference;
 
 import static www.xcd.com.mylibrary.activity.PermissionsActivity.PERMISSIONS_GRANTED;
 
-public class LoginActivity extends SimpleTopbarActivity {
+public class LoginActivity extends SimpleTopbarActivity implements EMCallBack{
 
     private EditText login_phone, login_password;
     private Button login;
     private TextView register, forget_password;
-
+    private String loginphone;//账号
+    private String loginpassword;//密码
+    private String utype;//类型 1供应商 2药店
     @Override
     protected Object getTopbarTitle() {
         return "登录";
@@ -80,13 +84,12 @@ public class LoginActivity extends SimpleTopbarActivity {
         params.put("uid", "1");
         okHttpGet(101, GlobalParam.ALLCITYLIST, params);
     }
-
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.login://登陆
-                String loginphone = login_phone.getText().toString().trim();
+                loginphone = login_phone.getText().toString().trim();
                 if ("".equals(loginphone) || loginphone == null) {
                     ToastUtil.showToast("手机号不能为空");
                     return;
@@ -96,7 +99,7 @@ public class LoginActivity extends SimpleTopbarActivity {
                     ToastUtil.showToast("请输入正确的手机号");
                     return;
                 }
-                String loginpassword = login_password.getText().toString().trim();
+                loginpassword = login_password.getText().toString().trim();
                 if ("".equals(loginpassword) || loginpassword == null) {
                     ToastUtil.showToast("密码不能为空");
                     return;
@@ -130,36 +133,44 @@ public class LoginActivity extends SimpleTopbarActivity {
             switch (requestCode) {
                 case 100:
                     Logininfo info = JSON.parseObject(returnData, Logininfo.class);
-                    String utype = info.getData().getUtype();
-                    String uid = info.getData().getUid();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("uid", uid);
-                    String strname = info.getData().getName();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("name", strname);
-                    String content = info.getData().getContent();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("content", content);
-                    String sex = info.getData().getSex();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("sex", sex);
-                    String headimage = info.getData().getHeadimg();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("headimg", headimage);
-                    String token = info.getData().getToken();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("token", token);
-                    String straddress = info.getData().getRegion();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("region", straddress);
-                    String detailednessaddress = info.getData().getAddress();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("address", detailednessaddress);
-                    String phone = info.getData().getPhone();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("phone", phone);
-                    String is_member = info.getData().getIs_member();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("is_member", is_member);
-                    String endtime = info.getData().getEndtime();
-                    XCDSharePreference.getInstantiation(this).setSharedPreferences("endtime", endtime);
-                    Log.e("TAG_","region="+straddress+";endtime="+endtime);
-                    if ("1".equals(utype)) {
-                        //供应商Main
-                        startActivity(new Intent(LoginActivity.this, MainSupplierActivity.class));
-                    } else if ("2".equals(utype)) {
-                        //药店Main
-                        startActivity(new Intent(LoginActivity.this, MainDrugstoreActivity.class));
+                    Logininfo.DataBean data = info.getData();
+                    if (data !=null&&!"".equals(data)){
+                        utype = data.getUtype();
+                        String uid = data.getUid();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("uid", uid);
+                        String strname = data.getName();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("name", strname);
+                        String content = data.getContent();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("content", content);
+                        String sex = data.getSex();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("sex", sex);
+                        String headimage = data.getHeadimg();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("headimg", headimage);
+                        String token = data.getToken();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("token", token);
+                        String straddress = data.getRegion();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("region", straddress);
+                        String detailednessaddress = data.getAddress();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("address", detailednessaddress);
+                        String phone = data.getPhone();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("phone", phone);
+                        String is_member = data.getIs_member();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("is_member", is_member);
+                        String endtime = data.getEndtime();
+                        XCDSharePreference.getInstantiation(this).setSharedPreferences("endtime", endtime);
+                        Log.e("TAG_","region="+straddress+";endtime="+endtime);
+                        String hxname = data.getHxname();
+                        String hxpwd = data.getHxpwd();
+                        if (hxname!=null&&!"".equals(hxname)&&hxpwd!=null&&!"".equals(hxpwd)){
+                            EMClient.getInstance().login(hxname,hxpwd,this);
+                        }
+                        if ("1".equals(utype)) {
+                            //供应商Main
+                            startActivity(new Intent(LoginActivity.this, MainSupplierActivity.class));
+                        } else if ("2".equals(utype)) {
+                            //药店Main
+                            startActivity(new Intent(LoginActivity.this, MainDrugstoreActivity.class));
+                        }
                     }
 
                     break;
@@ -286,5 +297,20 @@ public class LoginActivity extends SimpleTopbarActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSuccess() {
+        Log.e("TAG_环信", "环信登录聊天服务器成功！");
+    }
+
+    @Override
+    public void onError(int code, String message) {
+        Log.e("TAG_环信", "环信登录聊天服务器失败code="+code+";message="+message);
+    }
+
+    @Override
+    public void onProgress(int i, String s) {
+
     }
 }

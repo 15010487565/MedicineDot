@@ -42,8 +42,6 @@ import www.xcd.com.mylibrary.base.view.XListViewHome;
 import www.xcd.com.mylibrary.utils.ToastUtil;
 import www.xcd.com.mylibrary.utils.XCDSharePreference;
 
-import static www.xcd.com.mylibrary.utils.XCDSharePreference.context;
-
 /**
  * Created by Android on 2017/9/5.
  */
@@ -204,7 +202,7 @@ public class HomeSupplierFragment extends BaseThreeFragment implements
         params.put("uid", uid);
         okHttpGet(101, GlobalParam.BANNERIMG, params);
     }
-
+    private String titleregion;
     private void initData(String titleregion) {
         Log.e("TAG_首页开始", "titleregion=" + titleregion);
         if (titleregion == null || "".equals(titleregion)) {
@@ -222,6 +220,7 @@ public class HomeSupplierFragment extends BaseThreeFragment implements
                 titleregion = "北京市";
             }
         }
+        this.titleregion = titleregion;
         resetTopbarTitle(titleregion);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("uid", uid);
@@ -285,6 +284,10 @@ public class HomeSupplierFragment extends BaseThreeFragment implements
                     } else {
                         HomeSupplierinfo info = JSON.parseObject(returnData, HomeSupplierinfo.class);
                         data = info.getData();
+                        String is_member = info.getIs_member();
+                        XCDSharePreference.getInstantiation(getActivity()).setSharedPreferences("is_member", is_member);
+                        String endtime = info.getEndtime();
+                        XCDSharePreference.getInstantiation(getActivity()).setSharedPreferences("endtime", endtime);
                         if (data == null || data.size() == 0) {
                             nulllinear.setVisibility(View.VISIBLE);
                             home_viphint.setVisibility(View.VISIBLE);
@@ -294,15 +297,15 @@ public class HomeSupplierFragment extends BaseThreeFragment implements
                             count.setVisibility(View.VISIBLE);
                             listview.setVisibility(View.VISIBLE);
                             nulllinear.setVisibility(View.GONE);
-                            String is_member = XCDSharePreference.getInstantiation(context).getSharedPreferences("is_member");
                             if ("1".equals(is_member)) {//会员
                                 home_viphint.setVisibility(View.GONE);
                             } else {//非会员
                                 home_viphint.setVisibility(View.VISIBLE);
                             }
+
                             String infoCount = info.getCount();
                             String infocount_ = ((infoCount == null) || ("".equals(infoCount)) ? "0" : infoCount);
-                            count.setText("XX市加盟药店共" + infocount_ + "家");
+                            count.setText(titleregion+"加盟药店共" + infocount_ + "家");
                             info.getCount();
                             adapter.setData(data);
                             listview.setAdapter(adapter);

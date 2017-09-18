@@ -18,6 +18,24 @@ public class HomeSupplierinfo implements Serializable{
     private String errorcode;
     private String msg;
     private String count;
+    private String is_member;
+    private String endtime;
+
+    public String getIs_member() {
+        return is_member;
+    }
+
+    public void setIs_member(String is_member) {
+        this.is_member = is_member;
+    }
+
+    public String getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
+    }
 
     public String getCount() {
         return count;

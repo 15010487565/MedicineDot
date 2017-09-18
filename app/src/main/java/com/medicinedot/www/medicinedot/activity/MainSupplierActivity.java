@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.medicinedot.www.medicinedot.R;
 import com.medicinedot.www.medicinedot.fragment.HomeSupplierFragment;
 import com.medicinedot.www.medicinedot.fragment.MeSupplierFragment;
@@ -31,7 +34,7 @@ import www.xcd.com.mylibrary.base.activity.SimpleTopbarActivity;
 import www.xcd.com.mylibrary.base.fragment.BaseFragment;
 import www.xcd.com.mylibrary.widget.SnsTabWidget;
 
-public class MainSupplierActivity extends SimpleTopbarActivity {
+public class MainSupplierActivity extends SimpleTopbarActivity implements EMCallBack{
 
     /**供应商
      * fragment classes
@@ -275,6 +278,7 @@ public class MainSupplierActivity extends SimpleTopbarActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+        EMClient.getInstance().logout(true);
     }
 
     @Override
@@ -299,6 +303,22 @@ public class MainSupplierActivity extends SimpleTopbarActivity {
 
     @Override
     public void onFinishResult() {
+
+    }
+
+    @Override
+    public void onSuccess() {
+        Log.e("TAG_环信","退出环信登录");
+    }
+
+    @Override
+    public void onError(int code, String message) {
+        Log.e("TAG_环信","退出环信登录失败code="+code+";message="+message);
+        EMClient.getInstance().logout(false);
+    }
+
+    @Override
+    public void onProgress(int i, String s) {
 
     }
 
@@ -422,35 +442,6 @@ public class MainSupplierActivity extends SimpleTopbarActivity {
         return null;
     }
 
-
-//    @Override
-//    protected Class<?>[] getTopbarRightFuncArray() {
-//
-//        return rightFuncArray;
-//    }
-
-
-//    /**
-//     * 重设标题
-//     */
-//    private void resetTitle(int index) {
-//        switch (index) {
-//            case 0:
-//                tabWidget.setVisibility(View.VISIBLE);
-//                main_bottom.setVisibility(View.VISIBLE);
-//                break;
-//            case 1:
-//                main_bottom.setVisibility(View.VISIBLE);
-//                break;
-//            case 2:
-//                resetTopbarTitle(R.string.about);
-//                main_bottom.setVisibility(View.VISIBLE);
-//                break;
-//            default:
-//                main_bottom.setVisibility(View.VISIBLE);
-//                break;
-//        }
-//    }
 
     @Override
     protected void onDestroy() {

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,10 +15,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.medicinedot.www.medicinedot.R;
 import com.medicinedot.www.medicinedot.fragment.HomeDrugstoreFragment;
 import com.medicinedot.www.medicinedot.fragment.MeDrugstoreFragment;
 import com.medicinedot.www.medicinedot.fragment.RecentchatSupplierFragment;
+import com.medicinedot.www.medicinedot.listener.HuanxinConnectionListener;
 import com.medicinedot.www.medicinedot.view.NoScrollViewPager;
 import com.yonyou.sns.im.log.YYIMLogger;
 import com.yonyou.sns.im.util.common.ToastUtil;
@@ -31,7 +35,7 @@ import www.xcd.com.mylibrary.base.activity.SimpleTopbarActivity;
 import www.xcd.com.mylibrary.base.fragment.BaseFragment;
 import www.xcd.com.mylibrary.widget.SnsTabWidget;
 
-public class MainDrugstoreActivity extends SimpleTopbarActivity {
+public class MainDrugstoreActivity extends SimpleTopbarActivity implements EMCallBack{
 
     /**药店
      * fragment classes
@@ -80,6 +84,8 @@ public class MainDrugstoreActivity extends SimpleTopbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maindrugstore);
+        //注册环信一态的listener
+        EMClient.getInstance().addConnectionListener(new HuanxinConnectionListener(MainDrugstoreActivity.this));
         initView();
         // 初始化fragments
         initFragments();
@@ -275,6 +281,7 @@ public class MainDrugstoreActivity extends SimpleTopbarActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addCategory(Intent.CATEGORY_HOME);
         startActivity(intent);
+        EMClient.getInstance().logout(true);
     }
 
     @Override
@@ -299,6 +306,23 @@ public class MainDrugstoreActivity extends SimpleTopbarActivity {
 
     @Override
     public void onFinishResult() {
+
+    }
+
+    @Override
+    public void onSuccess() {
+        Log.e("TAG_环信","退出环信登录");
+    }
+
+    @Override
+    public void onError(int code, String message) {
+        Log.e("TAG_环信","退出环信登录失败code="+code+";message="+message);
+        EMClient.getInstance().logout(false);
+    }
+
+
+    @Override
+    public void onProgress(int i, String s) {
 
     }
 
